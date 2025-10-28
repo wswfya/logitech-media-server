@@ -1,25 +1,10 @@
-# 1. 克隆GitHub仓库到本地
-git clone https://github.com/wswfya/logitech-media-server.git
-cd logitech-media-server
-
-# 2. 创建Dockerfile（以LMS为例）
-echo "FROM toertel/logitech-media-server:latest" > Dockerfile
-
-# 3. （可选）添加docker-compose.yml（方便一键部署）
-cat > docker-compose.yml <<EOF
 version: '3.8'
 services:
   lms:
-    build: .
+    build: .  # 自动读取当前目录的Dockerfile（已替换为squeezebox/lms基础镜像）
     container_name: lms-server
     restart: always
     network_mode: host
     volumes:
-      - ./config:/srv/squeezebox
-      - ./music:/music
-EOF
-
-# 4. 提交并推送文件到GitHub
-git add .
-git commit -m "添加LMS的Dockerfile和docker-compose配置"
-git push origin main
+      - ./config:/srv/squeezebox  # 持久化LMS配置
+      - ./music:/music             # 挂载音乐目录
