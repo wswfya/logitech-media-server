@@ -5,3 +5,4 @@
 2. 构建镜像：`docker build -t lms-local .`
 3. 启动容器：`docker run -d --name lms-server --net=host -v ./config:/srv/squeezebox -v ./music:/music lms-local
 KK
+2222
