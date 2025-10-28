@@ -1,29 +1,37 @@
-name: 构建并推送LMS镜像到GHCR
-on: [push] # 推送代码时自动触发构建
+name: 构建并推送LMS多架构镜像到GHCR
+on:
+  push:
+    branches: [ main ]  # 仅在main分支推送时触发
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      # 新增 QEMU 配置步骤
+      # 步骤1：配置QEMU（支持跨架构模拟）
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
-      # 后续的拉取代码、登录仓库、构建推送步骤保持不变...
 
+      # 步骤2：配置Buildx（多架构构建工具）
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # 2. 登录GitHub容器仓库（GHCR）
+      # 步骤3：拉取仓库代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 步骤4：登录GitHub容器仓库（GHCR）
       - name: 登录GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }} # 需提前配置PAT密钥
+          password: ${{ secrets.GHCR_TOKEN }}  # 需在仓库Settings→Secrets中配置PAT令牌
 
-      # 3. 构建镜像并推送到GHCR
+      # 步骤5：构建并推送多架构镜像
       - name: 构建并推送镜像
         uses: docker/build-push-action@v5
         with:
-          context: . # 使用当前目录的Dockerfile
-          push: true
-          tags: ghcr.io/${{ github.repository }}:latest # 镜像标签（格式：ghcr.io/用户名/仓库名:版）
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          context: .  # 使用当前目录的Dockerfile
+          push: true  # 推送到仓库
+          tags: ghcr.io/${{ github.repository }}:latest  # 镜像标签
+          platforms: linux/amd64,linux/arm/v7,linux/arm64  # 支持的架构（含aarch64）
