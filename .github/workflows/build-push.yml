@@ -23,5 +23,5 @@ jobs:
         with:
           context: . # 使用当前目录的Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest # 镜像标签（格式：ghcr.io/用户名/仓库名:版本）
+          tags: ghcr.io/${{ github.repository }}:latest # 镜像标签（格式：ghcr.io/用户名/仓库名:版）
           platforms: linux/amd64,linux/arm/v7,linux/arm64
