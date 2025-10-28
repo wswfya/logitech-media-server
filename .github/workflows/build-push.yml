@@ -1,0 +1,26 @@
+name: 构建并推送LMS镜像到GHCR
+on: [push] # 推送代码时自动触发构建
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 拉取仓库代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 2. 登录GitHub容器仓库（GHCR）
+      - name: 登录GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }} # 需提前配置PAT密钥
+
+      # 3. 构建镜像并推送到GHCR
+      - name: 构建并推送镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: . # 使用当前目录的Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest # 镜像标签（格式：ghcr.io/用户名/仓库名:版本）
