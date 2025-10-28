@@ -1,1 +1,1 @@
-FROM squeezebox/lms:latest
+FROM epoupon/lms:latest
