@@ -1,1 +1,1 @@
-FROM toertel/logitech-media-server:latest;
+FROM toertel/logitech-media-server:latest
