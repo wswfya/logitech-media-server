@@ -5,9 +5,11 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      # 1. 拉取仓库代码
-      - name: 拉取代码
-        uses: actions/checkout@v4
+      # 新增 QEMU 配置步骤
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v3
+      # 后续的拉取代码、登录仓库、构建推送步骤保持不变...
+
 
       # 2. 登录GitHub容器仓库（GHCR）
       - name: 登录GHCR
